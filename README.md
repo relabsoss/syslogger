@@ -31,11 +31,11 @@ If you just want to get started with syslogger, the recommended configuration in
 the system's sys.config is:
 
     {kernel, logger, [{handler, default, undefined}]}.
-    {syslogger,
+    {syslogger, [
       {log_opts, [cons, pid, perror]},
       {logger, [{handler, default, syslogger,
                    #{ formatter => {logger_formatter, #{single_line => true}}}}]}
-    }.
+    ]}.
 
 Configuration
 -------------
@@ -46,13 +46,13 @@ application variables, or by using the `logger:add_handler/2` API.
 For instance if you want to add two handlers that log to two different syslog
 facilities just add this to your sys.config.
 
-    {syslogger,
+    {syslogger, [
       {ident, "myapp"},
       {log_opts, [cons, pid, perror]},
       {logger, [{handler, user_syslogger, syslogger, #{ facility => user }},
                 {handler, local0_syslogger, syslogger, #{ facility => local0 }}]
        }
-    }.
+    ]}.
 
 This will add two syslogger instances to the Erlang logger that use different facilities.
 
