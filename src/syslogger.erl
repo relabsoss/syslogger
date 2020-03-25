@@ -33,7 +33,7 @@ open(undefined, LogOpts, Facility) ->
 open(Ident, LogOpts, Facility) when is_list(Ident) ->
     open(list_to_binary(Ident), LogOpts, Facility);
 open(Ident, LogOpts, Facility) ->
-    syslog_open([Ident,$\0], LogOpts, Facility).
+    syslog_open(Ident, LogOpts, Facility).
 
 syslog_open(_Ident, _LogOpts, _Facility) ->
     not_loaded(?LINE).
