@@ -25,8 +25,7 @@ log(Log = #{ level := Level }, #{ formatter := {FModule, FConfig},
                                        }
                                 }) ->
     syslog(Facility bor maps:get(Level, LevelMap),
-           unicode:characters_to_binary(
-             io_lib:format("~ts\0",[FModule:format(Log, FConfig)]))).
+           unicode:characters_to_binary(FModule:format(Log, FConfig))).
 
 open(undefined, LogOpts, Facility) ->
     {ok, [Progname]} = init:get_argument(progname),
