@@ -75,6 +75,5 @@ assert_syslog(Match) ->
         {match, _} ->
             ok;
         nomatch ->
-            ct:pal("Sys log contents: ~s",[Syslog]),
-            ct:fail("Could not find ~p in /var/log/syslog",[Match])
+            ct:fail("Could not find ~p in /var/log/syslog. ~p",[Match, Syslog])
     end.
