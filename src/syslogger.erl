@@ -30,6 +30,8 @@ log(Log = #{ level := Level }, #{ formatter := {FModule, FConfig},
 open(undefined, LogOpts, Facility) ->
     {ok, [Progname]} = init:get_argument(progname),
     open(filename:basename(Progname), LogOpts, Facility);
+open(Ident, LogOpts, Facility) when is_list(Ident) ->
+    open(list_to_binary(Ident), LogOpts, Facility);
 open(Ident, LogOpts, Facility) ->
     syslog_open([Ident,$\0], LogOpts, Facility).
 

@@ -78,7 +78,7 @@ open(ErlNifEnv* env, int argc, const ERL_NIF_TERM argv[])
     ErlNifBinary ident;
     ERL_NIF_TERM value;
 
-    if (enif_inspect_iolist_as_binary(env, argv[0], &ident) == 0)
+    if (enif_inspect_binary(env, argv[0], &ident) == 0)
         return enif_make_badarg(env);
 
 #ifdef LOG_CONS
