@@ -25,7 +25,7 @@ log(Log = #{ level := Level }, #{ formatter := {FModule, FConfig},
                                        }
                                 }) ->
     syslog(Facility bor maps:get(Level, LevelMap),
-           unicode:characters_to_binary(FModule:format(Log, FConfig))).
+           [unicode:characters_to_binary(FModule:format(Log, FConfig)), $\0]).
 
 open(undefined, LogOpts, Facility) ->
     {ok, [Progname]} = init:get_argument(progname),
@@ -33,7 +33,7 @@ open(undefined, LogOpts, Facility) ->
 open(Ident, LogOpts, Facility) when is_list(Ident) ->
     open(list_to_binary(Ident), LogOpts, Facility);
 open(Ident, LogOpts, Facility) ->
-    syslog_open(unicode:characters_to_binary(Ident), LogOpts, Facility).
+    syslog_open([unicode:characters_to_binary(Ident), $\0], LogOpts, Facility).
 
 syslog_open(_Ident, _LogOpts, _Facility) ->
     not_loaded(?LINE).
