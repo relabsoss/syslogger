@@ -75,17 +75,11 @@ open(ErlNifEnv* env, int argc, const ERL_NIF_TERM argv[])
 {
     int facility = get_facility(env, argv[2]);
     int logopts = 0;
-    ErlNifBinary identBinary;
-    char *ident;
+    ErlNifBinary ident;
     ERL_NIF_TERM value;
 
-
-    if (enif_inspect_iolist_as_binary(env, argv[0], &identBinary) == 0)
+    if (enif_inspect_iolist_as_binary(env, argv[0], &ident) == 0)
         return enif_make_badarg(env);
-
-    ident = (char*)malloc(identBinary.size + 1);
-    memset(ident, 0, identBinary.size + 1);
-    memcpy(ident, identBinary.data, identBinary.size);
 
 #ifdef LOG_CONS
     if (enif_get_map_value(env, argv[1], enif_make_atom(env, "cons"), &value))
