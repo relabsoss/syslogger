@@ -25,6 +25,8 @@
     ATOM_DECL(syslog, LOG_SYSLOG);              \
     ATOM_DECL(uucp, LOG_UUCP);
 
+char *ident = 0;
+
 #define ATOM_DECL(A,B) static ERL_NIF_TERM atom_##A
 ATOMS
 #undef ATOM_DECL
@@ -43,7 +45,10 @@ ATOMS
 
 static void unload(ErlNifEnv* env, void* priv_data)
 {
-
+    if (ident) {
+        free(ident);
+    }
+    ident = 0;
 }
 
 static int upgrade(ErlNifEnv* env, void** priv_data, void** old_priv_data,
@@ -75,11 +80,20 @@ open(ErlNifEnv* env, int argc, const ERL_NIF_TERM argv[])
 {
     int facility = get_facility(env, argv[2]);
     int logopts = 0;
-    ErlNifBinary ident;
+    ErlNifBinary identBinary;
     ERL_NIF_TERM value;
 
-    if (enif_inspect_iolist_as_binary(env, argv[0], &ident) == 0)
+    if (enif_inspect_iolist_as_binary(env, argv[0], &identBinary) == 0)
         return enif_make_badarg(env);
+
+    if (ident) {
+        free(ident);
+        ident = 0;
+    }
+
+    ident = (char*)malloc(identBinary.size);
+    memcpy(ident, identBinary.data, identBinary.size);
+
 
 #ifdef LOG_CONS
     if (enif_get_map_value(env, argv[1], enif_make_atom(env, "cons"), &value))
@@ -111,7 +125,7 @@ open(ErlNifEnv* env, int argc, const ERL_NIF_TERM argv[])
         logopts |= LOG_PID;
 #endif
 
-    openlog((char*)ident.data, logopts, facility);
+    openlog(ident, logopts, facility);
     return enif_make_atom(env, "ok");
 }
 
