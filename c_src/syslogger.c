@@ -111,7 +111,7 @@ open(ErlNifEnv* env, int argc, const ERL_NIF_TERM argv[])
         logopts |= LOG_PID;
 #endif
 
-    openlog(ident, logopts, facility);
+    openlog((char*)ident.data, logopts, facility);
     return enif_make_atom(env, "ok");
 }
 
